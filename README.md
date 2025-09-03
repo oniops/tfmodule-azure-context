@@ -30,7 +30,6 @@ locals {
   project     = module.ctx.project
   environment = module.ctx.environment
   domain      = module.ctx.domain
-  name_prefix = module.ctx.name_prefix
 }
 ```
 
