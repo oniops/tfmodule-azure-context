@@ -1,7 +1,7 @@
 locals {
-  environment   = lower(var.context.environment)
-  env_alias     = substr(local.environment, 0, 1)
-  owner         = var.owner != null ? var.owner : var.context.owner
+  environment = lower(var.context.environment)
+  env_alias   = substr(local.environment, 0, 1)
+  owner       = var.owner != null ? var.owner : var.context.owner
 
   local_tags = {
     Project     = var.context.project
@@ -14,8 +14,7 @@ locals {
 
   tags = merge(
     (var.team != null ? {
-      OpsNowService = var.team
-      Team          = var.team
+      Team = var.team
     } : {}),
     local.local_tags,
     var.additional_tags
