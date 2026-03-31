@@ -26,6 +26,10 @@ output "env_alias" {
   value = local.env_alias
 }
 
+output "name_prefix" {
+  value = local.name_prefix
+}
+
 output "owner" {
   value = var.context.owner
 }
@@ -40,6 +44,10 @@ output "domain" {
 
 output "region" {
   value = var.context.region
+}
+
+output "region_alias" {
+  value = local.region_alias
 }
 
 output "tenant_id" {

@@ -34,3 +34,9 @@ variable "provisioner" {
   type        = string
   default     = "Terraform"
 }
+
+variable "cost_center" {
+  description = "Identify the cost center or business unit associated with a resource, typically for cost"
+  type        = number
+  default     = null
+}
