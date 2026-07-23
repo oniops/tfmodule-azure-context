@@ -30,6 +30,10 @@ output "name_prefix" {
   value = local.name_prefix
 }
 
+output "camel_name_prefix" {
+  value = local.camel_name_prefix
+}
+
 output "owner" {
   value = var.context.owner
 }
