@@ -32,7 +32,7 @@ variable "additional_tags" {
 variable "provisioner" {
   description = "Provisioner tool like terraform, cloudformation"
   type        = string
-  default     = "Terraform"
+  default     = "terraform"
 }
 
 variable "cost_center" {
