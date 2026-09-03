@@ -1,8 +1,13 @@
 locals {
-  environment  = lower(var.context.environment)
-  env_alias    = substr(local.environment, 0, 1)
-  region_alias = lookup(local.az_region_codes, var.context.region, "nn")
-  owner        = var.owner != null ? var.owner : var.context.owner
+  environment = lower(var.context.environment)
+  env_alias   = substr(local.environment, 0, 1)
+
+  # Azure는 "Korea Central" 과 "koreacentral" 을 모두 허용하므로,
+  # 코드 조회 전에 공백과 대소문자를 제거하여 정규화 한다.
+  region_key   = lower(replace(var.context.region, " ", ""))
+  region_alias = lookup(local.az_region_codes, local.region_key, "nn")
+
+  owner = var.owner != null ? var.owner : var.context.owner
 
   local_tags = {
     project     = var.context.project
@@ -54,7 +59,7 @@ locals {
     koreasouth         = "ks"
     malaysiawest       = "mw"
     mexicocentral      = "mc"
-    newzealandnorth    = "mzn"
+    newzealandnorth    = "nzn"
     northcentralus     = "ncu"
     northeurope        = "ne"
     norwayeast         = "noe"

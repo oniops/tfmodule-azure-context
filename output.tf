@@ -59,7 +59,7 @@ output "tenant_id" {
 }
 
 output "subscription_id" {
-  value = data.azurerm_client_config.current.subscription_id
+  value = var.context.subscription_id
 }
 
 output "client_object_id" {

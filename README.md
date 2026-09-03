@@ -1,6 +1,6 @@
 # tfmodule-azure-context
 
-tfmodule-auzre-context 테라폼 모듈은 Azure 클라우드 서비스 및 리소스를 정의 하는데 표준화된 네이밍 정책과 태깅 규칙을 지원 하고, 일관성있는 데이터소스 참조 모델을 제공 합니다.
+tfmodule-azure-context 테라폼 모듈은 Azure 클라우드 서비스 및 리소스를 정의 하는데 표준화된 네이밍 정책과 태깅 규칙을 지원 하고, 일관성있는 데이터소스 참조 모델을 제공 합니다.
 
 ## Usage
 
@@ -9,27 +9,31 @@ module "ctx" {
   source = "git::https://github.com/oniops/tfmodule-azure-context.git?ref=v1.0.0"
 
   context = {
-    project     = "demo"
-    environment = "Development"
-    owner       = "azure_demo@example.com"
-    domain      = "example.com"
-    customer    = "Example Customer"
-    team        = "Example Team"
-    region      = "Korea Central"
-    tenant_id   = "11112222-3333-4444-5555-666677778888"
-    department  = "Example"
+    project         = "demo"
+    environment     = "Development"
+    owner           = "azure_demo@example.com"
+    domain          = "example.com"
+    customer        = "Example Customer"
+    region          = "koreacentral"
+    tenant_id       = "11112222-3333-4444-5555-666677778888"
+    subscription_id = "99998888-7777-6666-5555-444433332222"
+    department      = "Example"
   }
+
+  team = "Example Team"
 }
 
 
 # Using context variables from ctx module
 locals {
-  context     = module.ctx.context
-  tags        = module.ctx.tags
-  region      = module.ctx.region
-  project     = module.ctx.project
-  environment = module.ctx.environment
-  domain      = module.ctx.domain
+  context         = module.ctx.context
+  tags            = module.ctx.tags
+  region          = module.ctx.region
+  project         = module.ctx.project
+  environment     = module.ctx.environment
+  domain          = module.ctx.domain
+  tenant_id       = module.ctx.tenant_id
+  subscription_id = module.ctx.subscription_id
 }
 ```
 
@@ -51,22 +55,22 @@ locals {
 <tbody>
     <tr>
         <td>context</td>
-        <td>표준화된 네이밍 정책, 태그 지정 규칙, 일관된 데이터 소스 참조 모듈을 제공하기 위한 Context 정보 입니다.</td>
-        <td>map(string)</td>
+        <td>표준화된 네이밍 정책, 태그 지정 규칙, 일관된 데이터 소스 참조 모듈을 제공하기 위한 Context 정보 입니다. 모든 속성은 필수 이며, 정의되지 않은 속성을 추가하면 무시 됩니다.</td>
+        <td>object</td>
         <td></td>
         <td>yes</td>
         <td>
 <pre>
 {
-  project     = "demo"
-  environment = "Development"
-  owner       = "azure_demo@example.com"
-  domain      = "example.com"
-  customer    = "Example Customer"
-  team        = "Example Team"
-  region      = "Korea Central"
-  tenant_id   = "11112222-3333-4444-5555-666677778888"
-  department  = "Example"
+  project         = "demo"
+  environment     = "Development"
+  owner           = "azure_demo@example.com"
+  domain          = "example.com"
+  customer        = "Example Customer"
+  region          = "koreacentral"
+  tenant_id       = "11112222-3333-4444-5555-666677778888"
+  subscription_id = "99998888-7777-6666-5555-444433332222"
+  department      = "Example"
 }
 </pre>
         </td>
@@ -97,12 +101,20 @@ locals {
     </tr> 
     <tr>
         <td>provisioner</td>
-        <td>프로비저닝 시 사용되는 도구 이름 입니다.</td>
+        <td>프로비저닝 시 사용되는 도구 이름 입니다. managed-by 태그 값으로 사용 됩니다.</td>
         <td>string</td>
-        <td>Terraform</td>
+        <td>terraform</td>
         <td>no</td>
         <td>MyIaCTool</td>
-    </tr>   
+    </tr>
+    <tr>
+        <td>cost_center</td>
+        <td>리소스와 연관된 코스트 센터 또는 비즈니스 유닛 입니다. 지정 시 cost-center 태그가 추가 됩니다.</td>
+        <td>number</td>
+        <td>null</td>
+        <td>no</td>
+        <td>1001</td>
+    </tr>
 </tbody>
 </table>
 
@@ -122,11 +134,11 @@ locals {
         <td>context</td>
         <td>입력받은 context 입니다.</td>
         <td>object</td>
-        <td>Input vairable context 와 동일 합니다.</td>
+        <td>Input variable context 와 동일 합니다.</td>
     </tr>
     <tr>
         <td>context_string</td>
-        <td>Key=Value 형식으로 Comma-Seperated 된 Context 값 입니다.</td>
+        <td>Key=Value 형식으로 Comma-Separated 된 Context 값 입니다.</td>
         <td>string</td>
         <td>"project=example_project,region=example_region,environment=example_env"....</td>
     </tr>
@@ -134,43 +146,49 @@ locals {
         <td>project</td>
         <td>입력받은 context의 project 값 입니다.</td>
         <td>string</td>
-        <td>Input vairable context 의 project 값과 동일 합니다.</td>
+        <td>Input variable context 의 project 값과 동일 합니다.</td>
     </tr>
     <tr>
         <td>environment</td>
         <td>입력받은 context의 environment 값 입니다.</td>
         <td>string</td>
-        <td>Input vairable context 의 environment 값과 동일 합니다.</td>
+        <td>Input variable context 의 environment 값과 동일 합니다.</td>
     </tr>
     <tr>
         <td>owner</td>
         <td>입력받은 context의 owner 값 입니다.</td>
         <td>string</td>
-        <td>Input vairable context 의 owner 값과 동일 합니다.</td>
+        <td>Input variable context 의 owner 값과 동일 합니다.</td>
     </tr>
     <tr>
         <td>domain</td>
         <td>입력받은 context의 domain 값 입니다.</td>
         <td>string</td>
-        <td>Input vairable context 의 domain 값과 동일 합니다.</td>
+        <td>Input variable context 의 domain 값과 동일 합니다.</td>
     </tr>
     <tr>
         <td>region</td>
         <td>입력받은 context의 region 값 입니다.</td>
         <td>string</td>
-        <td>Input vairable context 의 region 값과 동일 합니다.</td>
+        <td>Input variable context 의 region 값과 동일 합니다.</td>
     </tr>
     <tr>
-        <td>region</td>
+        <td>tenant_id</td>
         <td>입력받은 context의 tenant_id 값 입니다.</td>
         <td>string</td>
-        <td>Input vairable context 의 tenant_id 값과 동일 합니다.</td>
+        <td>Input variable context 의 tenant_id 값과 동일 합니다.</td>
+    </tr>
+    <tr>
+        <td>subscription_id</td>
+        <td>입력받은 context의 subscription_id 값 입니다.</td>
+        <td>string</td>
+        <td>Input variable context 의 subscription_id 값과 동일 합니다.</td>
     </tr>
     <tr>
         <td>team</td>
         <td>team 값 입니다.</td>
         <td>string</td>
-        <td>Input vairable team 값과 동일 합니다.</td>
+        <td>Input variable team 값과 동일 합니다.</td>
     </tr>
     <tr>
         <td>env_alias</td>
@@ -179,16 +197,34 @@ locals {
         <td>development 인 경우 d, production 인 경우 p 입니다.</td>
     </tr>
     <tr>
-        <td>env_alias</td>
-        <td>입력받은 context의 environment 값의 맨 첫번째 문자 입니다.</td>
+        <td>region_alias</td>
+        <td>입력받은 context의 region 값에 대응 하는 축약 코드 입니다. 정의되지 않은 리전인 경우 nn 입니다.</td>
         <td>string</td>
-        <td>development 인 경우 d, production 인 경우 p 입니다.</td>
+        <td>koreacentral 인 경우 kc, eastus 인 경우 eu 입니다.</td>
     </tr>
     <tr>
-        <td>subscription_id</td>
-        <td>현재 azure cli를 통해 선택 된 구독 id 입니다.</td>
+        <td>name_prefix</td>
+        <td>리소스 이름에 사용되는 접두사로 project, region_alias, env_alias 의 조합 입니다.</td>
         <td>string</td>
-        <td>"11112222-3333-4444-5555-666677778888"</td>
+        <td>"demo-kcd"</td>
+    </tr>
+    <tr>
+        <td>camel_name_prefix</td>
+        <td>구분자를 사용할 수 없는 리소스(예, Storage Account)를 위한 CamelCase 형식의 접두사 입니다.</td>
+        <td>string</td>
+        <td>"demoKcd"</td>
+    </tr>
+    <tr>
+        <td>tags</td>
+        <td>context 값과 cost_center, team, additional_tags 를 병합한 기본 태그 입니다.</td>
+        <td>map(string)</td>
+        <td>{project = "demo", environment = "Development", ...}</td>
+    </tr>
+    <tr>
+        <td>azuread_tags</td>
+        <td>tags 를 "Key=Value" 형식의 목록으로 변환한 값 입니다. Azure AD 리소스의 태그 형식에 사용 합니다.</td>
+        <td>list(string)</td>
+        <td>["project=demo", "environment=Development", ...]</td>
     </tr>
     <tr>
         <td>client_object_id</td>
